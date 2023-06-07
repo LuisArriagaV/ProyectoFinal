@@ -47,16 +47,15 @@ def menu():
     print("4. Salir del Programa")
 #Primera Vez 
 def op_1():
-    #PrimeraVez
-    periodos = int(input("¿En cuantos periodos de tiempo queres saber la probabilidad?:  ")) 
+    periodos = int(input("¿En cuántos periodos de tiempo quieres saber la probabilidad?: "))
     print()
-    EstadoInicial = int(input("¿Desde que estado te gustaria iniciar?: "))
+    EstadoInicial = int(input("¿Desde qué estado te gustaría iniciar?: "))
     print()
-    EstadoFinal = int(input("¿A cual es el estado que te gustaria llegar final?: "))
+    EstadoFinal = int(input("¿A cuál es el estado al que te gustaría llegar?: "))
     print()
 
     matrizpot = np.linalg.matrix_power(matriz, periodos)
-    print(f"Matriz a la {periodos} potencia.")
+    print(f"Matriz elevada a la {periodos}-ésima potencia:")
     for fila in matrizpot:
         print("[", end=" ")
         for elemento in fila:
@@ -64,27 +63,26 @@ def op_1():
         print("]")
 
     print()
+
     # Definimos la función para calcular la probabilidad de primer paso
     def P_first(m):
         if m == 0:
             return 0
         if m == 1:
             return matriz[EstadoInicial][EstadoFinal]
-        return sum([P_first(m-k)*np.linalg.matrix_power(matriz, k)[EstadoFinal][EstadoFinal] for k in range(1, m)])*matriz[EstadoInicial][EstadoFinal]
+        return sum([P_first(m-k)*np.linalg.matrix_power(matriz, k)[EstadoFinal][EstadoFinal] for k in range(1, m)]) * matriz[EstadoInicial][EstadoFinal]
 
     # Calculamos la probabilidad de primer paso directamente
     P_first_direct = matrizpot[EstadoInicial, EstadoFinal]
-    P_first(periodos)
+    P_first_prob = P_first(periodos)
 
-
-    #Calculamos la suma de las probabilidades de primer paso anteriores
-    sum_P_first = sum([P_first(m)*np.linalg.matrix_power(matrizpot, periodos-m)[EstadoFinal][EstadoFinal] for m in range(1,periodos)])
+    # Calculamos la suma de las probabilidades de primer paso anteriores
+    sum_P_first = sum([P_first(m) * np.linalg.matrix_power(matrizpot, periodos-m)[EstadoFinal][EstadoFinal] for m in range(1, periodos)])
 
     # Calculamos la probabilidad de primer paso utilizando la fórmula de renovación
     P_first = P_first_direct - sum_P_first
 
-
-    print("La probabilidad de primer paso de x a y en", periodos, "pasos es:", P_first)
+    print("La probabilidad de primer paso de", EstadoInicial, "a", EstadoFinal, "en", periodos, "pasos es:", P_first)
 
     
     seguir()
@@ -185,7 +183,7 @@ def seguir():
         os.system("cls")
         while True:
             # Esperar una entrada del usuario
-            user_input = input("Presiona Enter para salir del programa: ")
+            user_input = input("Presiona Enter para salir del programa")
     
             # Verificar si la entrada es una cadena vacía
             if user_input == "":
