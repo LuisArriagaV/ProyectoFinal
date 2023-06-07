@@ -200,11 +200,7 @@ matriz = crear_matriz()
 
 #CicloMenu
 while True:
-    for estado in matriz:
-        print("[", end=" ")
-        for elemento in estado:
-            print("{:8.2f}".format(elemento), end=" ")
-        print("]")
+    imprimir_matriz()
     print("\n ¿Con esta matriz, que deseas conocer?")
     menu()
     print()
