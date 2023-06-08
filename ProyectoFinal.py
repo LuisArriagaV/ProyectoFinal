@@ -130,48 +130,31 @@ def op_2():
     seguir()
 #Probabilidades de Absorcion
 def op_3():
-    #ProbabilidadesDeAbsorcion
-    def probabilidades_absorcion(matriz):
-        n = matriz.shape[0]
-        identidad = np.eye(n)
+    # Definir la matriz de transición
+    matriz_transicion = np.array(matriz)
 
-        # Verificar si hay estados absorbentes
-        if not np.any(np.diag(matriz) == 1):
-            raise ValueError("La matriz no tiene estados absorbentes.")
+    # Calcular los autovalores y autovectores
+    autovalores, autovectores = np.linalg.eig(matriz_transicion.T)
 
-        # Obtener la matriz Q
-        estados_absorbentes = np.where(np.diag(matriz) == 1)[0]
-        estados_no_absorbentes = np.where(np.diag(matriz) != 1)[0]
+    # Encontrar los estados de absorción
+    estados_absorcion = []
+    for i in range(len(autovalores)):
+        if np.isclose(autovalores[i], 1):
+            estado_absorcion = autovectores[:, i]
+            estados_absorcion.append(estado_absorcion)
 
-        Q = matriz[estados_no_absorbentes][:, estados_no_absorbentes]
-        R = matriz[estados_no_absorbentes][:, estados_absorbentes]
+    # Calcular las probabilidades de absorción
+    num_estados = len(matriz_transicion)
+    probabilidades_absorcion = np.zeros(num_estados)
+    probabilidad_inicial = 1.0 / num_estados  # Distribución inicial uniforme
 
-        N = np.linalg.inv(identidad - Q)
-        B = np.dot(N, R)
-        probabilidades = B.flatten()
-        return probabilidades
+    for estado_absorcion in estados_absorcion:
+        probabilidades_absorcion += probabilidad_inicial * estado_absorcion
 
-    def tiene_estados_absorcion(matriz):
-        estados_absorcion = np.where(np.diag(matriz) == 1)[0]
-        return len(estados_absorcion) > 0
-
-    matriz_array = np.array(matriz)
-    print("\nMatriz de transición sin Numpy:")
-    print(matriz)
-
-    print("\nMatriz de transición con Numpy:")
-    print(matriz_array)
-
-    if tiene_estados_absorcion(matriz_array):
-        try:
-            probabilidades = probabilidades_absorcion(matriz_array)
-            print("\nProbabilidades de absorción:")
-            for i, probabilidad in enumerate(probabilidades):
-                print(f"Estado {i+1}: {probabilidad}")
-        except ValueError as error:
-            print(f"\nError: {str(error)}")
-    else:
-        print("\nLa matriz no tiene estados de absorción.")
+    # Imprimir las probabilidades de absorción
+    print("Probabilidades de absorción:")
+    for i in range(num_estados):
+        print("Estado", i, ":", probabilidades_absorcion[i])
 
     seguir()
 #Opcion de Salir
