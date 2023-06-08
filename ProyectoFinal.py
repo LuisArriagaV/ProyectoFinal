@@ -89,41 +89,43 @@ def op_1():
 #Estados Recurrentes
 def op_2():
     #EstadosRecurrentes
-    # Obtener el tamaño de la matriz
-    n = len(matriz)
-    # Crear una lista de estados visitados
-    visitados = [False] * n
-    # Iterar sobre cada estado de la matriz
-    for i in range(n):
-        # Si el estado i no ha sido visitado
-        if not visitados[i]:
-            # Marcar el estado actual como visitado
-            visitados[i] = True
-            
-            # Crear una lista de estados alcanzables desde el estado actual
-            estados_alcanzables = [i]
-            
-            # Iterar hasta que no haya más estados alcanzables desde el estado actual
-            while estados_alcanzables:
-                # Tomar el primer estado de la lista
-                estado_actual = estados_alcanzables.pop(0)
-                
-                # Iterar sobre los estados de la matriz para verificar si son alcanzables desde el estado actual
-                for j in range(n):
-                    # Si hay una transición del estado actual al estado j
-                    if matriz[estado_actual][j] > 0 and not visitados[j]:
-                        # Marcar el estado j como visitado
-                        visitados[j] = True
-                        
-                        # Agregar el estado j a la lista de estados alcanzables
-                        estados_alcanzables.append(j)
-            
-            # Si el estado actual es alcanzable desde sí mismo, es un estado recurrente; de lo contrario, es un estado transitorio
-            if matriz[estado_actual][estado_actual] > 0:
-                print(f"El estado {i} es recurrente.")
-            else:
-                print(f"El estado {i} es transitorio.")
 
+    def identificar_estados_recurrentes_transitorios(matriz_transicion):
+        matriz_transicion = np.matrix(matriz)
+        num_estados = matriz_transicion.shape[0]
+        estados_recurrentes = []
+        estados_transitorios = []
+
+        # Identificar las clases de estados
+        visitados = np.zeros(num_estados, dtype=bool)
+
+        def dfs(estado):
+            visitados[estado] = True
+            for estado_siguiente in range(num_estados):
+                if matriz_transicion[estado, estado_siguiente] > 0 and not visitados[estado_siguiente]:
+                    dfs(estado_siguiente)
+
+        for estado in range(num_estados):
+            if not visitados[estado]:
+                dfs(estado)
+                if np.sum(visitados) == num_estados:
+                    estados_recurrentes.extend(np.where(visitados)[0])
+                else:
+                    estados_transitorios.extend(np.where(visitados)[0])
+
+        # Determinar estados recurrentes
+        estados_recurrentes = list(set(estados_recurrentes))
+        estados_transitorios = list(set(estados_transitorios))
+
+        # Identificar estados transitorios
+        todos_estados = set(range(num_estados))
+        estados_transitorios = list(todos_estados - set(estados_recurrentes))
+
+        return estados_recurrentes, estados_transitorios
+    estados_recurrentes, estados_transitorios = identificar_estados_recurrentes_transitorios(matriz)
+
+    print("Estados recurrentes:", estados_recurrentes)
+    print("Estados transitorios:", estados_transitorios)
 
     seguir()
 #Probabilidades de Absorcion
