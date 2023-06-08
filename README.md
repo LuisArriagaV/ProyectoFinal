@@ -17,3 +17,4 @@ Para ejecutar el archivo, solo se necesita dar doble click en el ejecutable, el 
 Para leer el archivo de codigo, se puede abrir con algun editor de texto (Recomendacion:  VSCode)
 
 
+Para leerlo en GITHUB: https://github.com/LuisArriagaV/ProyectoFinal
